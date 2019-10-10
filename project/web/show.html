@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>显示数据</title>
+</head>
+<style>
+    table{ border-collapse:collapse; border:1px solid #666; }
+    th, td{ border:1px solid #666; padding:15px; }
+    th{ background:#E3E3E3; }
+</style>
+<body>
+<table id="tbl">
+    <tr id="head" style="background:#E3E3E3;">
+        <th>symbol</th>
+        <th>changepercent</th>
+        <th>amount</th>
+        <th>code</th>
+        <th>buy</th>
+        <th>sell</th>
+        <th>ticktime</th>
+        <th>pricechange</th>
+        <th>settlement</th>
+        <th>volume</th>
+        <th>high</th>
+        <th>trade</th>
+        <th>low</th>
+        <th>name</th>
+        <th>open</th>
+    </tr>
+</table>
+</body>
+<script src="jquery-1.11.1.min.js"></script>
+<script language="JavaScript">
+    $("document").ready(function () {
+        var timer = setInterval(sendGet , 3000);//3秒定时请求一次数据
+    })
+
+    //解析json
+    function getDate(date) {
+        $.each(JSON.parse(date) , function (i , obj) {
+            console.log("i:"+i + " , " + "obj:" + obj);
+
+            $.each(obj , function (j , obj1) {
+                console.log("j:" + j + " , " + "obj1:" + obj1);
+
+                var tr = document.createElement("tr");
+                var symboltd = document.createElement("td");
+                var changepercenttd = document.createElement("td");
+                var amounttd = document.createElement("td");
+                var codetd = document.createElement("td");
+                var buytd = document.createElement("td");
+                var selltd = document.createElement("td");
+                var ticktimetd = document.createElement("td");
+                var pricechangetd = document.createElement("td");
+                var settlementtd = document.createElement("td");
+                var volumetd = document.createElement("td");
+                var hightd = document.createElement("td");
+                var tradetd = document.createElement("td");
+                var lowtd = document.createElement("td");
+                var nametd = document.createElement("td");
+                var opentd = document.createElement("td");
+
+                symboltd.innerText = obj1["symbol"];
+                changepercenttd.innerText = obj1["changepercent"];
+                amounttd.innerText = obj1["amount"];
+                codetd.innerText = obj1["code"];
+                buytd.innerText = obj1["buy"];
+                selltd.innerText = obj1["sell"];
+                ticktimetd.innerText = obj1["ticktime"];
+                pricechangetd.innerText = obj1["pricechange"];
+                settlementtd.innerText = obj1["settlement"];
+                volumetd.innerText = obj1["volume"];
+                hightd.innerText = obj1["high"];
+                tradetd.innerText = obj1["trade"];
+                lowtd.innerText = obj1["low"];
+                nametd.innerText = obj1["name"];
+                opentd.innerText = obj1["open"];
+
+                tr.appendChild(symboltd);
+                tr.appendChild(changepercenttd);
+                tr.appendChild(amounttd);
+                tr.appendChild(codetd);
+                tr.appendChild(buytd);
+                tr.appendChild(selltd);
+                tr.appendChild(ticktimetd);
+                tr.appendChild(pricechangetd);
+                tr.appendChild(settlementtd);
+                tr.appendChild(volumetd);
+                tr.appendChild(hightd);
+                tr.appendChild(tradetd);
+                tr.appendChild(lowtd);
+                tr.appendChild(nametd);
+                tr.appendChild(opentd);
+
+                $("#tbl").append(tr);
+            })
+        })
+    }
+
+    //发送http-get请求
+    function sendGet() {
+        console.log("请求数据");
+        var _num = Math.floor(Math.random()*1000);
+        var _url = "http://localhost:8080/project/show?_num="+_num;
+        $.ajax({
+            url:_url,
+            type:"get",
+            dateType:"json",
+            success:function (data , status , xhr) {
+                console.log(data);
+                //解析数据
+                getDate(data);
+            },
+            error:function (data , status , xhr) {
+                console.log("请求错误，状态码:" + status);
+            }
+        })
+    }
+</script>
+</html>
